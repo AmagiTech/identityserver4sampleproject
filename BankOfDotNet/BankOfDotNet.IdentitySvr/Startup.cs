@@ -16,14 +16,17 @@ namespace BankOfDotNet.IdentitySvr
         {
 
         }
-        
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc(opts => opts.EnableEndpointRouting = false);
+
             services.AddIdentityServer()
                     .AddDeveloperSigningCredential()
+                    .AddInMemoryIdentityResources(Config.GetIdentityResources())
                     .AddInMemoryApiResources(Config.GetAllApiResources())
                     .AddInMemoryClients(Config.GetClients())
                     .AddTestUsers(Config.GetUsers());
@@ -38,6 +41,8 @@ namespace BankOfDotNet.IdentitySvr
             }
 
             app.UseIdentityServer();
+            app.UseStaticFiles();
+            app.UseMvcWithDefaultRoute();
         }
     }
 }
